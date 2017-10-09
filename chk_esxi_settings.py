@@ -86,6 +86,7 @@ def GetArgs():
     """
     Supports the command-line arguments listed below.
     """
+    global args
     parser = argparse.ArgumentParser(description='Process args for retrieving all the Virtual Machines')
     parser.add_argument('-s', '--host', required=True, action='store', help='Remote host to connect to')
     parser.add_argument('-o', '--port', type=int, default=443, action='store', help='Port to connect on')
@@ -110,7 +111,7 @@ def GetParserInfo():
     return (dx_setting)
 
 
-def PrintVmInfo(vm, content, vchtime):
+def PrintVmInfo(vm, content, vchtime, esxiinfo):
 
     dx_setting = GetParserInfo()
 
@@ -119,6 +120,7 @@ def PrintVmInfo(vm, content, vchtime):
     sep = "="
 
     summary = vm.summary
+
     disk_list = []
     network_list = []
     scsi_contr_list = []
@@ -204,16 +206,27 @@ def PrintVmInfo(vm, content, vchtime):
         print("")
         print("{0:50} {1:70} {2:30} {3:10}".format("Settings/Parameters/Version","Current Value", "Recommended Value", "Result"))
         print("{0:50} {1:70} {2:30} {3:10}".format(sep * 50, sep * 70, sep * 30, sep * 10))
-        print("{0:50} {1:70} {2:30} {3:10}".format("ESXI Hostname",summary.runtime.host.name, nav, nav))
+        print("{0:50} {1:70} {2:30} {3:10}".format("ESXI Hostname",summary.runtime.host.name + '(' + args.host + ')', nav, nav))
 
         esxi_version_result = "Pass" if esxi_version >= dx_setting['esxi_version'] else "Fail"
-        print("{0:50} {1:70} {2:30} {3:10}".format("ESXI Version",esxi_version, dx_setting['esxi_version'], esxi_version_result))
+        print("{0:50} {1:70} {2:30} {3:10}".format("ESXI Version",esxi_version, 'ESXi ' + dx_setting['esxi_version'] + ' and Higher', esxi_version_result))
 
         cpu_type = re.sub('\s+', ' ',summary.runtime.host.summary.hardware.cpuModel)
         print("{0:50} {1:70} {2:30} {3:10}".format("ESXI CPU Type", cpu_type, nav, nav))
         print("{0:50} {1:<70} {2:30} {3:10}".format("ESXI CPU Sockets", summary.runtime.host.summary.hardware.numCpuPkgs, nav, nav))
         print("{0:50} {1:<70} {2:30} {3:10}".format("ESXI Cores Per Socket", (summary.runtime.host.summary.hardware.numCpuCores / summary.runtime.host.summary.hardware.numCpuPkgs), nav, nav))
-        print("{0:50} {1:70} {2:30} {3:10}".format("ESXI Hyperthreading Active",tbd, dx_setting['hyperthreading'], nav))
+        print("{0:50} {1:<70} {2:30} {3:10}".format("ESXi Total CPU", summary.runtime.host.summary.hardware.numCpuCores, nav, nav))
+        #print("{0:50} {1:70} {2:30} {3:10}".format("ESXI Hyperthreading Active",tbd, dx_setting['hyperthreading'], nav))
+
+        esxiHTConfig = str(esxiinfo['CPUhyperThreadingConfig'])
+        esxiHTConfig_fmt = "ESXI Hyperthreading Config"
+        esxiHTConfig_result = "Pass" if esxiHTConfig == dx_setting['esxi_hyperthreading'] else "Fail"
+        print("{0:50} {1:<70} {2:30} {3:10}".format(esxiHTConfig_fmt, esxiHTConfig, dx_setting['esxi_hyperthreading'] ,esxiHTConfig_result))
+
+        esxiPowerMgmtPolicy = esxiinfo['PowerMgmtPolicy']
+        esxiPowerMgmtPolicy_fmt = "ESXI PowerMgmt Policy"
+        esxiPowerMgmtPolicy_result = "Pass" if esxiPowerMgmtPolicy == dx_setting['esxi_powermgmt'] else "Fail"
+        print("{0:50} {1:<70} {2:30} {3:10}".format(esxiPowerMgmtPolicy_fmt, esxiPowerMgmtPolicy, dx_setting['esxi_powermgmt'] ,esxiPowerMgmtPolicy_result))
 
         esxi_memory = "{:.0f}".format(float((summary.runtime.host.summary.hardware.memorySize) / 1024 / 1024 / 1024))
         esxi_memory_used = "{:.0f}".format(float(summary.runtime.host.summary.quickStats.overallMemoryUsage) / 1024)
@@ -260,7 +273,10 @@ def PrintVmInfo(vm, content, vchtime):
     print("{0:50} {1:<70} {2:30} {3:10}".format(vm_cpu_res_fmt,vmcpures, str(vmcpu_rec) + " Mhz" , vmcpures_result))
     print("")
 
-
+    vm_cpuhtsharing = vm.config.flags.htSharing
+    vm_cpuhtsharing_fmt = "Delphix VM [" + vm_name + "]" + " HT Sharing"
+    vm_cpuhtsharing_result = "Pass" if vm_cpuhtsharing == dx_setting['vm_htsharing'] else "Fail"
+    print("{0:50} {1:<70} {2:30} {3:10}".format(vm_cpuhtsharing_fmt, vm_cpuhtsharing, dx_setting['vm_htsharing'] ,vm_cpuhtsharing_result))
 
     vm_memory = "{:.0f}".format((float(summary.config.memorySizeMB) / 1024))
     vm_memory_fmt = "Delphix VM [" + vm_name + "]" + " Memory"
@@ -284,8 +300,6 @@ def PrintVmInfo(vm, content, vchtime):
     print("{0:50} {1:<70} {2:30} {3:10}".format(vm_memory_res_fmt, str(vm_memres) + " GB", str(vm_memory) + " GB", "Pass" if float(vm_memres) >= float(vm_memory) else "Fail" ))
 
     print("")
-
-
 
     vm_disk_ctrl_fmt = "Delphix VM [" + vm_name + "]" + " Disk Controllers"
 
@@ -363,6 +377,18 @@ def GetProperties(content, viewType, props, specType):
         gpOutput.append(propDic)
     return gpOutput
 
+def esxi_info(content, viewType, props):
+    object_view = content.viewManager.CreateContainerView(content.rootFolder, viewType, True)
+    propESXIDic = {}
+    for obj in object_view.view:
+        # Turn the output in retProps into a usable dictionary of values
+        propESXIDic = { 'PowerMgmtPolicy' : obj.hardware.cpuPowerManagementInfo.currentPolicy,
+                    'CPUhyperThreadingConfig' : obj.config.hyperThread.config,
+                    'CPUhyperThreadingAvailable' : obj.config.hyperThread.available,
+                    'CPUhyperThreadingActive' : obj.config.hyperThread.active,
+                    'vMotionEnabled' : obj.summary.config.vmotionEnabled }
+    object_view.Destroy()
+    return propESXIDic
 
 def main():
     args = GetArgs()
@@ -415,13 +441,16 @@ def main():
         esxi_build = content.about.build
         esxi_info_stat = 0
 
-        retProps = GetProperties(content, [vim.VirtualMachine], ['name', 'runtime.powerState'], vim.VirtualMachine)
+        retESXIProps = esxi_info(content, [vim.HostSystem], ['hyperthreading'])
+        print (retESXIProps)
 
+        retProps = GetProperties(content, [vim.VirtualMachine], ['name', 'runtime.powerState'], vim.VirtualMachine)
+        
         #Find VM supplied as arg and use Managed Object Reference (moref) for the PrintVmInfo
         for vm in retProps:
             if (vm['name'] in vmnames) and (vm['runtime.powerState'] == "poweredOn"):
                 esxi_info_stat += 1
-                PrintVmInfo(vm['moref'], content, vchtime)
+                PrintVmInfo(vm['moref'], content, vchtime,retESXIProps)
             elif vm['name'] in vmnames:
                 print('ERROR: Problem connecting to Virtual Machine.  {} is likely powered off or suspended'.format(vm['name']))
 
