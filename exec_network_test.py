@@ -494,6 +494,7 @@ def main():
             tgthostlist = [x.strip() for x in args.tgtlist.split(",")]
         
         verbose = args.verbose
+        verbose = True
         force = args.force
 
         dlpxSess = dlpxSession(dlpxengine,dlpxuser,dlpxpwd,verbose)
