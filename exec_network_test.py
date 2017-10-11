@@ -60,6 +60,7 @@ import os
 import time
 import signal
 import sys
+import socket
 #import getopt
 #import logging
 
@@ -535,8 +536,8 @@ def main():
         """
         dlpxSess.printMsg ("A job failed in the Delphix Engine","True","L1","E","N")
         dlpxSess.printMsg (e.job,"True","L1","E","N")
-        elapsed_minutes = time_elapsed()
-        dlpxSess.printMsg (basename(__file__) + " took " + str(elapsed_minutes) + " minutes to get this far.","True","L1","E","N")
+        #elapsed_minutes = time_elapsed()
+        #dlpxSess.printMsg (basename(__file__) + " took " + str(elapsed_minutes) + " minutes to get this far.","True","L1","E","N")
         sys.exit(3)
 
     except KeyboardInterrupt:
@@ -544,18 +545,20 @@ def main():
         This is to gracefully handle ctrl+c exits
         """
         dlpxSess.printMsg ("You sent a CTRL+C to interrupt the process","True","L0","I","Y")
-        elapsed_minutes = time_elapsed()
-        dlpxSess.printMsg (basename(__file__) + " took " + str(elapsed_minutes) + " minutes to get this far.","True","L1","E","N")
+        #elapsed_minutes = time_elapsed()
+        #dlpxSess.printMsg (basename(__file__) + " took " + str(elapsed_minutes) + " minutes to get this far.","True","L1","E","N")
+    except socket.error:
+        dlpxSess.printMsg ("Connection to Delphix Engine (" + dlpxengine + ") Failed","True","L0","E","Y")
     except:
         """
         All other exceptions are handled here
         """
-        dlpxSess.printMsg ("Error::","True","L0","E","Y")
-        dlpxSess.printMsg (sys.exc_info()[0],"True","L0","E","Y")
-        dlpxSess.printMsg (traceback.format_exc(),"True","L0","E","Y")
-        elapsed_minutes = time_elapsed()
-        dlpxSess.printMsg (basename(__file__) + " took " + str(elapsed_minutes) + " minutes to get this far.","True","L1","E","N")
-        sys.exit(1)
+        dlpxSess.printMsg ("Error:: Please Contact Delphix Administator","True","L0","E","Y")
+        #dlpxSess.printMsg (sys.exc_info()[0],"True","L0","E","Y")
+        #dlpxSess.printMsg (traceback.format_exc(),"True","L0","E","Y")
+        #elapsed_minutes = time_elapsed()
+        #dlpxSess.printMsg (basename(__file__) + " took " + str(elapsed_minutes) + " minutes to get this far.","True","L1","E","N")
+        #sys.exit(1)
 
 # Start program
 if __name__ == "__main__":
