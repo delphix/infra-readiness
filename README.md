@@ -13,5 +13,5 @@ Download the 2 scripts chk_esxi_settings.exe & exec_network_test.exe
 
 Prerequisites
 
-These scripts can be run from any Windows host. Check Documentation for more details 
+These scripts can be run from any Windows host. Check  [documentation](https://github.com/delphix/dxtoolkit/wiki) for more details
 
