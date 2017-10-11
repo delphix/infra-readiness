@@ -548,7 +548,7 @@ def main():
         dlpxSess.printMsg (basename(__file__) + " took " + str(elapsed_minutes) + " minutes to get this far.","True","L1","E","N")
     except:
         """
-        Everything else gets caught here
+        All other exceptions are handled here
         """
         dlpxSess.printMsg ("Error::","True","L0","E","Y")
         dlpxSess.printMsg (sys.exc_info()[0],"True","L0","E","Y")
