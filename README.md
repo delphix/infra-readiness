@@ -8,5 +8,5 @@ Infra-readiness  is a set of scripts, which are delivered by Delphix professiona
 No knowledge of Python is required. In fact, no programming experience whatsoever is required to use these scripts. These scripts gather the ESX & VM settings of the Delphix engine and also run automated 
 network tests.
 
- Check  [documentation](https://github.com/delphix/infra-readiness/wiki/documentation) for more details
+ Check  [documentation](https://github.com/delphix/infra-readiness/wiki) for more details
 
