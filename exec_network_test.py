@@ -1,36 +1,31 @@
 #! /usr/bin/env python
-#================================================================================
-# File:     exec_network_test
-# Type:     python script
-# Author:   Delphix Professional Services
-# Date:     10/10/2017
+"""
 #
-# Copyright and license:
+# Copyright (c) 2017, 2018 by Delphix. All rights reserved.
 #
-#       Licensed under the Apache License, Version 2.0 (the "License"); you may
-#       not use this file except in compliance with the License.
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+#     http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 #
-#       You may obtain a copy of the License at
-#     
-#               http://www.apache.org/licenses/LICENSE-2.0
+# Copyright (c) 2015,2016 by Delphix. All rights reserved.
 #
-#       Unless required by applicable law or agreed to in writing, software
-#       distributed under the License is distributed on an "AS IS" basis,
-#       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-#
-#       See the License for the specific language governing permissions and
-#       limitations under the License.
-#     
-#       Copyright (c) 2017 by Delphix.  All rights reserved.
-#
-# Description:
-#
-#   Python script to conduct network latency and throughput test on a
-#   specified Delphix virtualization engine.
-#
+# Program Name : exec_network_test.py
+# Type         : python script
+# Description  : Python script to conduct network latency and throughput test on a
+#                specified Delphix virtualization engine.
+# Author       : Ajay Thotangare / Vikram Kulkarni
+# Created      : 10/10/2017 (v1.0.0)
 #
 
-"""
 Code    : exec_network_test
 Syntax  :
 Usage   : exec_network_test [-h] -e DLPX_ENG_HOST [-o PORT] -u DLPX_ADMIN_USER [-p PASSWORD] [-t DLPX_TARGET_HOSTS] 
@@ -49,9 +44,16 @@ optional arguments:
   -f , --force                                              Force to mark target host(s) healthy for test
   -v , --verbose                                            Verbose execution
 
-# Modifications:
-#   Ajay Thotangare     10/10/17    1st Version
-#================================================================================
+
+############################################################################
+# Author  : Ajay Thotangare
+# Created : 10/10/17
+# Purpose : (1) Conduct Network Test on specified Engine. 1st Draft
+############################################################################
+# Modified: Ajay Thotangare
+# Modified: 10/11/17
+# Purpose : (1) 1st Executable Version
+############################################################################
 """
 
 import argparse
@@ -74,7 +76,7 @@ from delphixpy.web.vo import NetworkLatencyTestParameters, NetworkThroughputTest
 
 class dlpxSession:
 
-    def __init__(self, dlpxengine,dlpxuser,dlpxpwd,verbose):
+    def __init__(self, dlpxengine,dlpxuser,dlpxpwd,verbose,logfile):
         self.dlpxengine = dlpxengine
         self.dlpxuser = dlpxuser
         self.dlpxpwd = dlpxpwd
@@ -94,8 +96,11 @@ class dlpxSession:
         if not self.engine:
             print('Could not connect to the specified delphix engine using specified username and password')
             return -1
-
-        self.logfile = "exec_network_test_" + time.strftime("%m%d%Y_%H%M%S") + ".log"
+        
+        if logfile:
+            self.logfile = logfile
+        else:
+            self.logfile = "exec_network_test_" + time.strftime("%m%d%Y_%H%M%S") + ".log"
         self.f = open(self.logfile,"w")
 
     def closeLogFile(self):
@@ -482,6 +487,7 @@ def main():
     try:
         tgthostlist = []
         args = GetArgs()
+        logfile = ''
 
         dlpxengine = args.dlpxengine
         dlpxuser = args.dlpxuser
@@ -494,11 +500,14 @@ def main():
             [tgthostlist.strip() for tgthostlist in args.tgtlist.split(",")]             
             tgthostlist = [x.strip() for x in args.tgtlist.split(",")]
         
+        if args.logfile:
+            logfile = args.logfile
+
         verbose = args.verbose
         verbose = True
         force = args.force
 
-        dlpxSess = dlpxSession(dlpxengine,dlpxuser,dlpxpwd,verbose)
+        dlpxSess = dlpxSession(dlpxengine,dlpxuser,dlpxpwd,verbose,logfile)
 
         dlpxSess.printMsg (" ","True","L0","I","Y")
         dlpxSess.printMsg ("INFRASTRUCTURE READINESS REPORT (IRR) - Network Tests",verbose,"L0","I","Y")
@@ -545,8 +554,10 @@ def main():
         This is to gracefully handle ctrl+c exits
         """
         dlpxSess.printMsg ("You sent a CTRL+C to interrupt the process","True","L0","I","Y")
+        """
         #elapsed_minutes = time_elapsed()
         #dlpxSess.printMsg (basename(__file__) + " took " + str(elapsed_minutes) + " minutes to get this far.","True","L1","E","N")
+        """
     except socket.error:
         dlpxSess.printMsg ("Connection to Delphix Engine (" + dlpxengine + ") Failed","True","L0","E","Y")
     except:

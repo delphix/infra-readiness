@@ -1,68 +1,64 @@
 #!/usr/bin/env python
 
 """
+#
+# Copyright (c) 2017, 2018 by Delphix. All rights reserved.
+#
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+#     http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# Copyright (c) 2015,2016 by Delphix. All rights reserved.
+#
+# Program Name : chk_esxi_settings.py
+# Description  : Check settings of ESXI with respect to delphix
+# Author       : Ajay Thotangare / Vikram Kulkarni
+# Created      : 10/17/2017 (v1.0.0)
+#
 
 Code    : chk_esxi_settings.py
 Syntax  :
-Usage   : chk_esxi_settings.py [-h] -s HOST [-o PORT] -u USER [-p PASSWORD] -e VM
-                            [-c] [-t DISK_TYPE]
+Usage   : chk_esxi_settings.py [-h] -s HOST [-o PORT] -u USER [-p PASSWORD] -e VM [-t DISK_TYPE] [-c]
 
 Process args for retrieving all the Virtual Machines
 
 optional arguments:
-  -h, --help            show this help message and exit
-  -s HOST, --host HOST  Remote host to connect to
-  -o PORT, --port PORT  Port to connect on
-  -u USER, --user USER  User name to use when connecting to host
-  -p PASSWORD, --password PASSWORD
-                        Password to use when connecting to host
-  -e VM, --vm VM        One or more Virtual Machines to report on
-  -c, --cert_check_skip
-                        skip ssl certificate check
-  -t DISK_TYPE, --disk_type DISK_TYPE
-                        Disk Storage Type (non_ssd (default) | ssd
+  -h, --help                           show this help message and exit
+  -s HOST, --host HOST                 Remote host to connect to
+  -o PORT, --port PORT                 Port to connect on
+  -u USER, --user USER                 User name to use when connecting to host
+  -p PASSWORD, --password PASSWORD     Password to use when connecting to host
+  -e VM, --vm VM                       One or more Virtual Machines to report on
+  -c, --cert_check_skip                skip ssl certificate check
+  -t DISK_TYPE, --disk_type DISK_TYPE  Disk Storage Type (non_ssd (default) | ssd
 
-Sample Output:
+############################################################################
+# Modified: Ajay Thotangare
+# Modified: 11/15/2017
+# Purpose : (1) Marked cert_check_skip as default option
+#           (2) Added feature to detect storage path policy for vmdk's
+#           (3) Modified format with sections number to reduce column width
+############################################################################
+# Modified: Ajay Thotangare
+# Modified: 12/01/2017
+# Purpose : (1) Check if 10% Memory is free for ESXI host
+#           (2) Check if 4 CPU's are free for ESXI host
+#           (3) Modified format with sections number to reduce column width
+############################################################################
 
-python chk_esxi_settings.py -s 192.168.1.76 -u root -p password -m illium1  -c
-
-Settings/Parameters/Version                        Current Value                                                          Recommended Value              Result
-================================================== ====================================================================== ============================== ==========
-ESXI Hostname                                      optimus                                                                N/A                            N/A
-ESXI Version                                       6.0.0                                                                  5.5                            Pass
-ESXI CPU Type                                      Intel(R) Xeon(R) CPU X5690 @ 3.47GHz                                   N/A                            N/A
-ESXI CPU Sockets                                   2                                                                      N/A                            N/A
-ESXI Cores Per Socket                              6                                                                      N/A                            N/A
-ESXI Hyperthreading Active                         TBD                                                                    false                          N/A
-ESXI Physical Memory                               95 GB                                                                  N/A                            N/A
-ESXI Memory Reservation                            76 GB (Usage)                                                          10 GB (10% Reserved)           Pass
-ESXI HA                                            TBD                                                                    enabled                        TBD
-ESXI DRS                                           TBD                                                                    disabled                       TBD
-
-Delphix VM [illium1] Number of vCPUs               4                                                                      8                              Fail
-Delphix VM [illium1] CPU Reservation               None                                                                   13828 Mhz                      Fail
-
-Delphix VM [illium1] Memory                        24 GB                                                                  64 GB                          Fail
-Delphix VM [illium1] Memory Reservation            0 GB                                                                   24 GB                          Fail
-
-Delphix VM [illium1] Disk Controllers              ['0:0', '1:0', '2:0', '3:0', '0:1', '0:2']                             Distribute VMDKs               Pass
-Delphix VM [illium1] SCSI Controllers              SCSI controller 0 | LSI Logic                                          LSI Logic                      Pass
-Delphix VM [illium1] SCSI Controllers              SCSI controller 1 | LSI Logic                                          LSI Logic                      Pass
-Delphix VM [illium1] SCSI Controllers              SCSI controller 2 | LSI Logic                                          LSI Logic                      Pass
-Delphix VM [illium1] SCSI Controllers              SCSI controller 3 | LSI Logic                                          LSI Logic                      Pass
-
-Delphix VM [illium1] NIC                           Network adapter 1 | VM Network | VirtualVmxnet3                        vmxnet3                        Pass
-Delphix VM [illium1] NIC                           Network adapter 2 | VM Network | VirtualE1000                          vmxnet3                        Fail
-
-Delphix VM [illium1] Hard disk 1                   Thick Prov:false, EagerZero:NA   , Ctrl: 0:0, Size: 300 GB             Thick,Eager-Zero               Fail
-Delphix VM [illium1] Hard disk 3                   Thick Prov:false, EagerZero:NA   , Ctrl: 2:0, Size: 8 GB               Thick,Eager-Zero               Fail
-Delphix VM [illium1] Hard disk 2                   Thick Prov:false, EagerZero:NA   , Ctrl: 1:0, Size: 8 GB               Thick,Eager-Zero               Fail
-Delphix VM [illium1] Hard disk 5                   Thick Prov:false, EagerZero:NA   , Ctrl: 0:1, Size: 8 GB               Thick,Eager-Zero               Fail
-Delphix VM [illium1] Hard disk 4                   Thick Prov:false, EagerZero:NA   , Ctrl: 3:0, Size: 8 GB               Thick,Eager-Zero               Fail
-Delphix VM [illium1] Hard disk 6                   Thick Prov:true , EagerZero:true , Ctrl: 0:2, Size: 8 GB               Thick,Eager-Zero               Pass
-
-Comments: The code is a fork from py-vminfo.py which can be downloaded from github.
-          It was modified to fit Delphix Infrastructure checklist script.
+Comments: The code is a fork from py-vminfo.py 
+          [ https://github.com/lgeeklee/python-vmstats/blob/master/py-vminfo.py] 
+          which can be downloaded from github. It was modified to fit Delphix 
+          Infrastructure checklist script.
 """
 
 from __future__ import print_function
@@ -94,7 +90,7 @@ def GetArgs():
     parser.add_argument('-p', '--password', required=False, action='store',
                         help='Password to use when connecting to host')
     parser.add_argument('-e', '--vm', required=True, action='store', help='One or more Virtual Machines to report on')
-    parser.add_argument('-c', '--cert_check_skip', required=False, action='store_true', help='skip ssl certificate check')
+    parser.add_argument('-c', '--cert_check_skip', default=True, required=False, action='store_true', help='skip ssl certificate check')
     parser.add_argument('-t', '--disk_type', default='non_ssd', action='store', help='Disk Storage Type (non_ssd (default) | ssd')
     args = parser.parse_args()
     return args
@@ -127,15 +123,24 @@ def GetParserInfo():
     dx_setting['vnic'] = 'vmxnet3'
     dx_setting['vm_htsharing'] = 'none'
     dx_setting['esxi_powermgmt'] = 'High Performance'
-
+    dx_setting['vm_storagepathpolicy'] = 'VMW_PSP_RR'
+    
     return (dx_setting)
 
+def get_lun(scsiLun, key):
+   return [x for x in scsiLun if x.key == key]
+
+def get_disk_lun(scsiLun, lun_key, names):
+   lun = get_lun(scsiLun, lun_key)
+   if len(lun) == 0:
+      return False
+   return lun[0].lunType == "disk" and lun[0].canonicalName in names
 
 def PrintVmInfo(vm, content, vchtime, esxiinfo):
 
     dx_setting = GetParserInfo()
 
-    tbd = "TBD"
+    tbd = "[ Verify Manually ]"
     nav = "N/A"
     sep = "="
 
@@ -216,13 +221,16 @@ def PrintVmInfo(vm, content, vchtime, esxiinfo):
                                                          each_vm_hardware.backing.fileName,
                                                          vm_info['disks'][each_vm_hardware.key]['busNumber'],
                                                          each_vm_hardware.unitNumber))
-        elif (each_vm_hardware.key >= 4000) and (each_vm_hardware.key < 5000):
+        elif (each_vm_hardware.key >= 4000) and (each_vm_hardware.key < 5000):            
             device_name = type(each_vm_hardware).__name__.split(".")[-1]
-            network_list.append('{} | {} | {}'.format(each_vm_hardware.deviceInfo.label,
-                                                         each_vm_hardware.deviceInfo.summary,
-                                                         device_name))
+            #network_list.append('{} | {} | {}'.format(each_vm_hardware.deviceInfo.label, each_vm_hardware.deviceInfo.summary, device_name))
+            network_list.append('{} | {} | {}'.format(each_vm_hardware.deviceInfo.label, each_vm_hardware.macAddress, device_name))
 
     if ( esxi_info_stat == 1 ):
+        print("")
+        print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+        print("SECTION - I : ESXi Host = " + summary.runtime.host.name)
+        print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
         print("")
         print("{0:50} {1:70} {2:30} {3:10}".format("Settings/Parameters/Version","Current Value", "Recommended Value", "Result"))
         print("{0:50} {1:70} {2:30} {3:10}".format(sep * 50, sep * 70, sep * 30, sep * 10))
@@ -237,6 +245,11 @@ def PrintVmInfo(vm, content, vchtime, esxiinfo):
         print("{0:50} {1:<70} {2:30} {3:10}".format("ESXI Cores Per Socket", (summary.runtime.host.summary.hardware.numCpuCores / summary.runtime.host.summary.hardware.numCpuPkgs), nav, nav))
         print("{0:50} {1:<70} {2:30} {3:10}".format("ESXi Total CPU", summary.runtime.host.summary.hardware.numCpuCores, nav, nav))
         #print("{0:50} {1:70} {2:30} {3:10}".format("ESXI Hyperthreading Active",tbd, dx_setting['hyperthreading'], nav))
+
+        esxiAllocCPU = int(esxiinfo['totallocatedCPU'])
+        esxiAllocCPU_fmt = "ESXI Total Allocated CPU"
+        esxiAllocCPU_result = "Pass" if (int(summary.runtime.host.summary.hardware.numCpuCores) - int(esxiAllocCPU)) >= 4 else "Fail"
+        print("{0:50} {1:<70} {2:30} {3:10}".format(esxiAllocCPU_fmt, esxiAllocCPU, "Atleast 4 ESX CPU free" ,esxiAllocCPU_result))
 
         esxiHTConfig = str(esxiinfo['CPUhyperThreadingConfig'])
         esxiHTConfig_fmt = "ESXI Hyperthreading Enabled"
@@ -253,21 +266,31 @@ def PrintVmInfo(vm, content, vchtime, esxiinfo):
         esxi_memory_used = "{:.0f}".format(float(summary.runtime.host.summary.quickStats.overallMemoryUsage) / 1024)
         print("{0:50} {1:<70} {2:30} {3:10}".format("ESXI Physical Memory",str(esxi_memory) + " GB", nav, nav))
 
+        esxiAllocMEM = int(esxiinfo['totallocatedMEM'])
+        esxiAllocMEM_fmt = "ESXI Total Allocated Memory to all VMs"
+        esxiAllocMEM_result = "Pass" if (int(esxiAllocMEM)/1024) <= (int(esxi_memory) * 0.9 ) else "Fail"
+        print("{0:50} {1:<70} {2:30} {3:10}".format(esxiAllocMEM_fmt, str(int(esxiAllocMEM)/1024) + " GB", "<=" + str((int(esxi_memory) * 0.9 )) + " [ 10% free for ESXI ]" ,esxiAllocMEM_result))
+
         esxi_memory_free = float(esxi_memory) - float(esxi_memory_used)
         esxi_memory_reserved = "{:.0f}".format(float(esxi_memory) * 0.10)
         esxi_memory_reserved_result = "Pass" if esxi_memory_reserved >= float(esxi_memory_free) else "Fail"
         #print("{0:50} {1:<70} {2:30} {3:10}".format("ESXI Memory Reservation ",str(esxi_memory_used) + " GB (Usage)", str(esxi_memory_reserved) + " GB (10% Reserved)", esxi_memory_reserved_result))
 
-        print("{0:50} {1:<70} {2:30} {3:10}".format("ESXI HA",tbd, dx_setting['esxi_ha'],tbd ))
-        print("{0:50} {1:<70} {2:30} {3:10}".format("ESXI DRS",tbd, dx_setting['esxi_drs'],tbd))
+        print("{0:50} {1:<70} {2:30} {3:10}".format("ESXI HA",tbd, dx_setting['esxi_ha'],"N/A" ))
+        print("{0:50} {1:<70} {2:30} {3:10}".format("ESXI DRS",tbd, dx_setting['esxi_drs'],"N/A"))
 
-    if (esxi_info_stat >= 2 ):
-        print("")
-        print("{0:140}".format('-' * 160))
+    #if (esxi_info_stat >= 2 ):
+    #    print("")
+    #    print("{0:140}".format('-' * 160))
 
-    print("")
+ 
     vm_name = summary.config.name
-    vm_name_fmt = "Delphix VM [" + vm_name + "]" + " Total vCPUs"
+    print("")
+    print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+    print("SECTION - II : Delphix Engine = " + vm_name)
+    print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+    print("")  
+    vm_name_fmt = "[" + vm_name + "]" + " Total vCPUs"
     vm_min_cpu_result = "Pass" if summary.config.numCpu >= float(dx_setting['minimum_cpu']) else "Fail"
     print("{0:50} {1:<70} {2:30} {3:10}".format(vm_name_fmt,summary.config.numCpu, dx_setting['minimum_cpu'], vm_min_cpu_result))
 
@@ -286,18 +309,18 @@ def PrintVmInfo(vm, content, vchtime, esxiinfo):
         vmcpures_result = "Fail"
 
     
-    vm_cpu_res_fmt = "Delphix VM [" + vm_name + "]" + " CPU Reservation"
+    vm_cpu_res_fmt = "[" + vm_name + "]" + " CPU Reservation"
     print("{0:50} {1:<70} {2:30} {3:10}".format(vm_cpu_res_fmt,vmcpures, str(vmcpu_rec) + " Mhz" , vmcpures_result))
 
     vm_cpuhtsharing = vm.config.flags.htSharing
-    vm_cpuhtsharing_fmt = "Delphix VM [" + vm_name + "]" + " HT Sharing"
+    vm_cpuhtsharing_fmt = "[" + vm_name + "]" + " HT Sharing"
     vm_cpuhtsharing_result = "Pass" if vm_cpuhtsharing == dx_setting['vm_htsharing'] else "Fail"
     print("{0:50} {1:<70} {2:30} {3:10}".format(vm_cpuhtsharing_fmt, vm_cpuhtsharing, dx_setting['vm_htsharing'] ,vm_cpuhtsharing_result))
 
     print("")
 
     vm_memory = "{:.0f}".format((float(summary.config.memorySizeMB) / 1024))
-    vm_memory_fmt = "Delphix VM [" + vm_name + "]" + " Total Memory"
+    vm_memory_fmt = "[" + vm_name + "]" + " Total Memory"
     vm_memory_result = "Pass" if float(summary.config.memorySizeMB/1024) >= float(dx_setting['minimum_memory']) else "Fail"
     print("{0:50} {1:<70} {2:30} {3:10}".format(vm_memory_fmt, str(vm_memory) + " GB", ">=" + dx_setting['minimum_memory'] + " GB",vm_memory_result))
 
@@ -310,13 +333,13 @@ def PrintVmInfo(vm, content, vchtime, esxiinfo):
         if (filler1 == "MB"):
             vm_memres = "{:.1f}".format(float(vm_memres)/1024)
             #vm_memres = int(vm_memres)/1024
-    vm_memory_res_fmt = "Delphix VM [" + vm_name + "]" + " Memory Reservation"
+    vm_memory_res_fmt = "[" + vm_name + "]" + " Memory Reservation"
     vm_memory_res_result = "Pass" if float(vm_memres) >= float(vm_memory) else "Fail"
     print("{0:50} {1:<70} {2:30} {3:10}".format(vm_memory_res_fmt, str(vm_memres) + " GB", str(vm_memory) + " GB", vm_memory_res_result ))
     
     print("")
 
-    vm_vnic_fmt = "Delphix VM [" + vm_name + "]" + " NIC"
+    vm_vnic_fmt = "[" + vm_name + "]" + " NIC"
     if len(network_list) > 0:
         for each_vnic in network_list:
             vnic_result = "Pass" if dx_setting['vnic'] in each_vnic.lower() else "Fail"
@@ -324,14 +347,14 @@ def PrintVmInfo(vm, content, vchtime, esxiinfo):
 
     print("")
 
-    vm_scsi_ctrl_fmt = "Delphix VM [" + vm_name + "]" + " SCSI Controllers Type"
+    vm_scsi_ctrl_fmt = "[" + vm_name + "]" + " SCSI Controllers Type"
     if len(scsi_contr_list) > 0:
         for each_scsi in scsi_contr_list:
             (ctrlName, ctrlType) = each_scsi.split("|")
             vm_scsi_ctrl_result = "Pass" if ctrlType.strip() == dx_setting['scsi_controller_type'] else "Fail"
             print("{0:50} {1:70} {2:30} {3:10}".format(vm_scsi_ctrl_fmt, each_scsi, dx_setting['scsi_controller_type'], vm_scsi_ctrl_result))
 
-    vm_disk_ctrl_fmt = "Delphix VM [" + vm_name + "]" + " [<Controller>:<numofdisks>] "
+    vm_disk_ctrl_fmt = "[" + vm_name + "]" + " [<Controller>:<tot_disks>]"
     ctrl = {}
     ctrl0 = ctrl1 = ctrl2 = ctrl3 = 0
     for c in controller_units:
@@ -359,9 +382,9 @@ def PrintVmInfo(vm, content, vchtime, esxiinfo):
     
     hdd_labellist.sort()
     for hdd_label in hdd_labellist:
-        vm_hdd_fmt = "Delphix VM [" + vm_name + "] " + hdd_label + " (" + disk_type + ")"
-        vm_hdd_cur_value = "Thick Prov:" + "{0:5}".format(hdd[hdd_label]['thickProvisioned']) + ", EagerZero:" + "{0:5}".format(hdd[hdd_label]['eagerZero']) + ", Ctrl: " \
-                + hdd[hdd_label]['controller_unit'] + ", Size: " + str(hdd[hdd_label]['sizeGB']) + " GB"
+        vm_hdd_fmt = "[" + vm_name + "] " + hdd_label + " (" + disk_type + ")"
+        vm_hdd_cur_value = "Thick Prov:" + "{0:5}".format(hdd[hdd_label]['thickProvisioned']) + " | EagerZero:" + "{0:5}".format(hdd[hdd_label]['eagerZero']) + "| Ctrl: " \
+                + hdd[hdd_label]['controller_unit'] + " | Size: " + str(hdd[hdd_label]['sizeGB']) + " GB"
 
         disk_provision_format = disk_type + '_disk_provision_format'
         disk_provision_type = disk_type + '_disk_provision_type'
@@ -376,8 +399,31 @@ def PrintVmInfo(vm, content, vchtime, esxiinfo):
             vm_hdd_rec_res = 'Fail'
 
         print("{0:50} {1:70} {2:30} {3:10}".format(vm_hdd_fmt, vm_hdd_cur_value, vm_hdd_rec_value,vm_hdd_rec_res))
-
+    
+    print("")    
+    #PrintStoragePolicy(vm, content, vchtime, vm_name)
+    myconfig = vm.config
+    for dev in myconfig.hardware.device:
+        #if not isinstance(dev, vim.vm.device.VirtualDisk) or not isinstance(dev.backing, vim.vm.device.VirtualFileBacking):
+        if not isinstance(dev, vim.vm.device.VirtualDisk):
+            continue # If it isn't a file backing, then it likely isn't on a datastore we can reference
+        ds = dev.backing.datastore
+        naa = naa = [x.diskName for x in ds.info.vmfs.extent]
+        host = vm.runtime.host
+        storageDeviceInfo = host.configManager.storageSystem.storageDeviceInfo
+        luns = storageDeviceInfo.multipathInfo.lun
+        scsiLun = storageDeviceInfo.scsiLun
+        policies = [x.policy for x in luns if get_disk_lun(scsiLun, x.lun, naa)]
+        for policy in policies:
+            #print(dev.deviceInfo.label)
+            #print("Disk %s, policy %s" % (dev.backing.fileName, policy.policy))
+            vm_storagepathpolicy_fmt = "[" + vm_name + "] " + "StoragePathPolicy" + "( HDD " + (dev.deviceInfo.label).split(" ")[-1] + " )"
+            vm_storagepathpolicy =  policy.policy
+            vm_storagepathpolicy_result = "Pass" if vm_storagepathpolicy == dx_setting['vm_storagepathpolicy'] else "Fail"
+            vm_storagepathpolicy =  policy.policy + " (Round Robin)" if policy.policy == "VMW_PSP_RR" else policy.policy
+            print("{0:50} {1:<70} {2:30} {3:10}".format(vm_storagepathpolicy_fmt, vm_storagepathpolicy, dx_setting['vm_storagepathpolicy'] ,vm_storagepathpolicy_result))
     print("")
+
 
 
 
@@ -406,18 +452,45 @@ def GetProperties(content, viewType, props, specType):
         gpOutput.append(propDic)
     return gpOutput
 
-def esxi_info(content, viewType, props):
+def esxi_info(content, viewType, props,vchtime):
     object_view = content.viewManager.CreateContainerView(content.rootFolder, viewType, True)
     propESXIDic = {}
+
+    totallocatedCPU = 0
+    totallocatedMEM = 0
+    retProps = GetProperties(content, [vim.VirtualMachine], ['name', 'runtime.powerState'], vim.VirtualMachine)
+    for vm in retProps:
+        retval = PrintAllocCPUMEM(vm['moref'], content, vchtime)
+        totallocatedCPU = int(retval.split(':')[0]) + totallocatedCPU
+        totallocatedMEM = int(retval.split(':')[1]) + totallocatedMEM
     for obj in object_view.view:
         # Turn the output in retProps into a usable dictionary of values
         propESXIDic = { 'PowerMgmtPolicy' : obj.hardware.cpuPowerManagementInfo.currentPolicy,
                     'CPUhyperThreadingConfig' : obj.config.hyperThread.config,
                     'CPUhyperThreadingAvailable' : obj.config.hyperThread.available,
                     'CPUhyperThreadingActive' : obj.config.hyperThread.active,
-                    'vMotionEnabled' : obj.summary.config.vmotionEnabled }
+                    'vMotionEnabled' : obj.summary.config.vmotionEnabled,
+                    'totallocatedCPU' : totallocatedCPU,
+                    'totallocatedMEM' : totallocatedMEM }
     object_view.Destroy()
     return propESXIDic
+
+def PrintAllocCPUMEM(vm, content, vchtime):
+        allocatedCPU = 0
+        allocatedMEM = 0
+        #print("-" * 70)
+        #print("Name:                    {0}".format(vm.name))
+        #print("CPUs:                    {0}".format(vm.config.hardware.numCPU))
+        #print("MemoryMB:                {0}".format(vm.config.hardware.memoryMB))
+        #print("Guest PowerState:        {0}".format(vm.guest.guestState))
+        #print("Guest PowerState:        {0}".format(vm.summary.runtime.powerState))
+        #if vm.guest.guestState == "running" :
+        if vm.summary.runtime.powerState == "poweredOn" :
+            allocatedCPU = allocatedCPU + vm.config.hardware.numCPU
+            allocatedMEM = allocatedMEM + vm.config.hardware.memoryMB
+            return str(allocatedCPU) + ":" + str(allocatedMEM)
+        else :
+            return "0:0"
 
 def main():
     args = GetArgs()
@@ -471,13 +544,16 @@ def main():
         esxi_build = content.about.build
         esxi_info_stat = 0
 
-        retESXIProps = esxi_info(content, [vim.HostSystem], ['hyperthreading'])
+        retESXIProps = esxi_info(content, [vim.HostSystem], ['hyperthreading'],vchtime)
         #print (retESXIProps)
 
         retProps = GetProperties(content, [vim.VirtualMachine], ['name', 'runtime.powerState'], vim.VirtualMachine)
 
         #Find VM supplied as arg and use Managed Object Reference (moref) for the PrintVmInfo
         for vm in retProps:
+            #retval = PrintVmInfotmp(vm['moref'], content, vchtime)
+            #print(retval)
+            #print("Total CPU Allocated : {0} , Memory Allocated : {1}".format(allocatedCPU, allocatedMEM))
             if (vm['name'] in vmnames) and (vm['runtime.powerState'] == "poweredOn"):
                 esxi_info_stat += 1
                 PrintVmInfo(vm['moref'], content, vchtime,retESXIProps)
