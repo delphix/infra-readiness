@@ -28,6 +28,7 @@
 
 Code    : exec_network_test
 Syntax  :
+Script Version : 3.0.0
 Usage   : exec_network_test [-h] -e DLPX_ENG_HOST [-o PORT] -u DLPX_ADMIN_USER [-p PASSWORD] [-t DLPX_TARGET_HOSTS] 
                             [-l logfilename] [-v] [-f]
 
@@ -143,7 +144,7 @@ class dlpxSession:
         elif (os.name == "nt"):
             response = os.system('PING ' + hostname + ' -n 1 | FIND /I /V "unreachable" | FIND /I "Reply from"  > NUL' )
         else:
-            print "OS Not supported"
+            print ("OS Not supported")
         # and then check the response...
         if response == 0:
             pingstatus = "Active"
@@ -484,6 +485,7 @@ def GetArgs():
     return args
 
 def main():
+    print("Script Version : 3.0.0")
     try:
         tgthostlist = []
         args = GetArgs()
