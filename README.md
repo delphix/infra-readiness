@@ -57,7 +57,7 @@ optional arguments:
 ```sh
 exec_network_test_win64 --help
 Script Version : 3.0.0
-usage: exec_network_test.py [-h] -e DLPXENGINE [-o PORT] -u DLPXUSER [-p DLPXPWD] [-t TGTLIST] [-l LOGFILE] [-f] [-v]
+usage: exec_network_test_win64 [-h] -e DLPXENGINE [-o PORT] -u DLPXUSER [-p DLPXPWD] [-t TGTLIST] [-l LOGFILE] [-f] [-v]
 
 Process args for executing network tests
 
@@ -77,7 +77,7 @@ optional arguments:
 ```sh
 exec_network_test_win64 --help
 Script Version : 3.0.0
-usage: exec_network_test.py [-h] -e DLPXENGINE [-o PORT] -u DLPXUSER [-p DLPXPWD] [-t TGTLIST] [-l LOGFILE] [-f] [-v]
+usage: exec_network_test_win64 [-h] -e DLPXENGINE [-o PORT] -u DLPXUSER [-p DLPXPWD] [-t TGTLIST] [-l LOGFILE] [-f] [-v]
 
 Process args for executing network tests
 

@@ -24,9 +24,10 @@
 # Author       : Ajay Thotangare
 # Created      : 10/17/2017 (v1.0.0)
 #
-Code    : chk_esxi_settings.py
+Code    : chk_esxi_settings
 Syntax  :
-Usage   : chk_esxi_settings.py [-h] -s HOST [-o PORT] -u USER [-p PASSWORD] -e VM -t DISK_TYPE [-d]
+Script Version : 3.0
+Usage   : chk_esxi_settings [-h] -s HOST [-o PORT] -u USER [-p PASSWORD] -e VM -t DISK_TYPE [-d]
 
 Process args for retrieving all the Virtual Machines
 
@@ -731,8 +732,8 @@ def main():
     global esxi_build
     global esxi_info_stat
 
-    print("Script Version : 3.0.0")
-    logger.info("Script Version : 3.0.0")
+    print("Script Version : 3.0")
+    logger.info("Script Version : 3.0")
     e = None
     
     try:

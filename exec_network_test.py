@@ -28,7 +28,7 @@
 
 Code    : exec_network_test
 Syntax  :
-Script Version : 3.0.0
+Script Version : 3.0
 Usage   : exec_network_test [-h] -e DLPX_ENG_HOST [-o PORT] -u DLPX_ADMIN_USER [-p PASSWORD] [-t DLPX_TARGET_HOSTS] 
                             [-l logfilename] [-v] [-f]
 
@@ -485,7 +485,7 @@ def GetArgs():
     return args
 
 def main():
-    print("Script Version : 3.0.0")
+    print("Script Version : 3.0")
     try:
         tgthostlist = []
         args = GetArgs()
