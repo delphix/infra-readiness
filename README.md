@@ -1,12 +1,54 @@
+# Infra-Readiness
 
-## Infra-Readiness
+## Purpose
+Infra-readiness  is a set of scripts, which are delivered by Delphix professional services team. Scripts are written in Python and compiled to run from windows and linux machines.
 
-Infra-readiness  is a set of scripts, which are delivered by Delphix professional services team. Scripts are written in Python and compiled to run from windows.
+No prior knowledge of Python is required. In fact, no programming experience whatsoever is required to use these scripts. These scripts are useful for
+  - gathering the ESX & VM settings of the Delphix engine and check best practices.
+  - run automated network tests
 
-No knowledge of Python is required. In fact, no programming experience whatsoever is required to use these scripts. These scripts gather the ESX & VM settings of the Delphix engine and also run automated 
-network tests.
+Check  [documentation](https://github.com/delphix/infra-readiness/wiki) for more details
 
- Check  [documentation](https://github.com/delphix/infra-readiness/wiki) for more details
+## Usage
+
+```sh
+./chk_esxi_settings.py --help
+Script Version : 3.0.0
+usage: chk_esxi_settings.py [-h] -s HOST [-o PORT] -u USER [-p PASSWORD] -e VM -t DISK_TYPE [-c] [-v] [-d]
+
+Process args for retrieving all the Virtual Machines
+
+optional arguments:
+  -h, --help                               show this help message and exit
+  -s HOST, --host HOST                     Remote host to connect to
+  -o PORT, --port PORT                     Port to connect on
+  -u USER, --user USER                     User name to use when connecting to host
+  -p PASSWORD, --password PASSWORD         Password to use when connecting to host
+  -e VM, --vm VM                           comma seperated One or more Virtual Machines to report on
+  -c, --cert_check_skip                    skip ssl certificate check
+  -t DISK_TYPE, --disk_type DISK_TYPE      Disk Storage Type (non_ssd (default) | ssd
+  -d, --debug                              debug info
+  -v VERBOSE, --verbose VERBOSE            verbose level... repeat up to three times.
+```
+
+```sh
+./exec_network_test.py --help
+Script Version : 3.0.0
+usage: exec_network_test.py [-h] -e DLPXENGINE [-o PORT] -u DLPXUSER [-p DLPXPWD] [-t TGTLIST] [-l LOGFILE] [-f] [-v]
+
+Process args for executing network tests
+
+optional arguments:
+  -h, --help                                show this help message and exit
+  -e DLPXENGINE, --dlpxengine DLPXENGINE    Remote delphix engine host to connect
+  -o PORT, --port PORT                      Port to connect on 
+  -u DLPXUSER, --dlpxuser DLPXUSER          User name to use when connecting to delphix engine
+  -p DLPXPWD, --dlpxpwd DLPXPWD             Password to use when connecting to host
+  -t TGTLIST, --tgtlist TGTLIST             Comma seperated One or more Target Hosts to conduct network test
+  -l LOGFILE, --logfile LOGFILE             Name of custom logfile
+  -f, --force                               Force to mark target host(s) healthy for test
+  -v, --verbose                             Verbose Mode of execution
+```
 
 ## Contributing
 
