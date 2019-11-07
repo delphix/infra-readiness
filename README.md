@@ -11,11 +11,11 @@ Check  [documentation](https://github.com/delphix/infra-readiness/wiki) for more
 
 ## Usage
 
-*Check ESXI Settings [ Windows Version ]*
+*Check ESXI Settings*
 ```sh
-chk_esxi_settings_win64 --help
-Script Version : 3.0.0
-usage: chk_esxi_settings_win64 [-h] -s HOST [-o PORT] -u USER [-p PASSWORD] -e VM -t DISK_TYPE [-c] [-v] [-d]
+chk_esxi_settings --help
+Script Version : 3.0
+usage: chk_esxi_settings [-h] -s HOST [-o PORT] -u USER [-p PASSWORD] -e VM -t DISK_TYPE [-c] [-v] [-d]
 
 Process args for retrieving all the Virtual Machines
 
@@ -32,52 +32,12 @@ optional arguments:
   -v VERBOSE, --verbose VERBOSE            verbose level... repeat up to three times.
 ```
 
-*Check ESXI Settings [ Linux Version ]*
+
+*Exec Network Tests*
 ```sh
-chk_esxi_settings_linux --help
-Script Version : 3.0.0
-usage: chk_esxi_settings_win64 [-h] -s HOST [-o PORT] -u USER [-p PASSWORD] -e VM -t DISK_TYPE [-c] [-v] [-d]
-
-Process args for retrieving all the Virtual Machines
-
-optional arguments:
-  -h, --help                               show this help message and exit
-  -s HOST, --host HOST                     Remote host to connect to
-  -o PORT, --port PORT                     Port to connect on
-  -u USER, --user USER                     User name to use when connecting to host
-  -p PASSWORD, --password PASSWORD         Password to use when connecting to host
-  -e VM, --vm VM                           comma seperated One or more Virtual Machines to report on
-  -c, --cert_check_skip                    skip ssl certificate check
-  -t DISK_TYPE, --disk_type DISK_TYPE      Disk Storage Type (non_ssd (default) | ssd
-  -d, --debug                              debug info
-  -v VERBOSE, --verbose VERBOSE            verbose level... repeat up to three times.
-```
-
-*Exec Network Tests [ Windows Version ]*
-```sh
-exec_network_test_win64 --help
-Script Version : 3.0.0
-usage: exec_network_test_win64 [-h] -e DLPXENGINE [-o PORT] -u DLPXUSER [-p DLPXPWD] [-t TGTLIST] [-l LOGFILE] [-f] [-v]
-
-Process args for executing network tests
-
-optional arguments:
-  -h, --help                                show this help message and exit
-  -e DLPXENGINE, --dlpxengine DLPXENGINE    Remote delphix engine host to connect
-  -o PORT, --port PORT                      Port to connect on 
-  -u DLPXUSER, --dlpxuser DLPXUSER          User name to use when connecting to delphix engine
-  -p DLPXPWD, --dlpxpwd DLPXPWD             Password to use when connecting to host
-  -t TGTLIST, --tgtlist TGTLIST             Comma seperated One or more Target Hosts to conduct network test
-  -l LOGFILE, --logfile LOGFILE             Name of custom logfile
-  -f, --force                               Force to mark target host(s) healthy for test
-  -v, --verbose                             Verbose Mode of execution
-```
-
-*Exec Network Tests [ Linux Version ]*
-```sh
-exec_network_test_win64 --help
-Script Version : 3.0.0
-usage: exec_network_test_win64 [-h] -e DLPXENGINE [-o PORT] -u DLPXUSER [-p DLPXPWD] [-t TGTLIST] [-l LOGFILE] [-f] [-v]
+exec_network_test --help
+Script Version : 3.0
+usage: exec_network_test [-h] -e DLPXENGINE [-o PORT] -u DLPXUSER [-p DLPXPWD] [-t TGTLIST] [-l LOGFILE] [-f] [-v]
 
 Process args for executing network tests
 
