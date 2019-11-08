@@ -32,6 +32,7 @@ optional arguments:
   -v VERBOSE, --verbose VERBOSE            verbose level... repeat up to three times.
 ```
 
+Note : Please use the name of delphix VM as vm name used in esxi host. IP address will not be recognized
 
 *Exec Network Tests*
 ```sh

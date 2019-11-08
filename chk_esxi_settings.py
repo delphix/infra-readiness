@@ -29,7 +29,7 @@ Syntax  :
 Script Version : 3.0
 Usage   : chk_esxi_settings [-h] -s HOST [-o PORT] -u USER [-p PASSWORD] -e VM -t DISK_TYPE [-d]
 
-Process args for retrieving all the Virtual Machines
+Process args for retrieving all the Virtual Machines.
 
 optional arguments:
   -h, --help                           show this help message and exit
@@ -82,7 +82,7 @@ from pyVmomi import vmodl, vim
 
 # from ConfigParser import SafeConfigParser
 
-parser = argparse.ArgumentParser(description='Process args for retrieving all the Virtual Machines')
+parser = argparse.ArgumentParser(description='Please use the name of delphix VM as vm name used in esxi host. IP address will not be recognized')
 parser.add_argument('-s', '--host', required=True, action='store', help='Remote host to connect to')
 parser.add_argument('-o', '--port', type=int, default=443, action='store', help='Port to connect on')
 parser.add_argument('-u', '--user', required=True, action='store', help='User name to use when connecting to host')
@@ -96,17 +96,21 @@ parser.add_argument('-v', '--verbose', action="store", help="verbose level... re
 logger = logging.getLogger('Global')
 logger.setLevel(logging.DEBUG)
 
+debug_logfile = "logs/chk_esxi_settings_debug.log"
+output_file = "logs/chk_esxi_settings_debug.txt"
+vm_stats_output = "logs/vm_stats.csv"
+esx_global_output = "logs/esx_global.csv"
 if not os.path.exists('logs'): os.mkdir('logs')
-if path.exists("logs/chk_esxi_settings_debug.log"): os.remove("logs/chk_esxi_settings_debug.log") 
-if path.exists("logs/chk_esxi_settings_debug.txt"): os.remove("logs/chk_esxi_settings_debug.txt") 
-if path.exists("logs/vm_stats.csv"): os.remove("logs/vm_stats.csv") 
-if path.exists("logs/esx_global.csv"): os.remove("logs/esx_global.csv") 
+if path.exists(debug_logfile): os.remove(debug_logfile) 
+if path.exists(output_file): os.remove(output_file) 
+if path.exists(vm_stats_output): os.remove(vm_stats_output) 
+if path.exists(esx_global_output): os.remove(esx_global_output) 
 
-f = open("logs/esx_global.csv", "w")
+f = open(esx_global_output, "w")
 f.write("{}, {}, {}, {}, {}, {}, {}, {}, {}\n".format("esx_version", "esx_build", "esx_update", "cpus", "cores", "core_threads", "ht_active", "ht_enabled", "ht_best_practice"))
 f.close()
 
-f = open("logs/vm_stats.csv", "w")
+f = open(vm_stats_output, "w")
 f.write("{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}\n".format("guest_name", "cpus", "cpu_cores", "cpu_reserved", "cpu_best_practice", "memoryGB", "memory_reserved", "memory_best_practice", "memory_reserved_needed", "ht_sharing", "ht_best_practice", "controller / LUN count", "storage_best_practice"))
 f.close()
 
@@ -371,7 +375,7 @@ def PrintVmInfo(args, vm, content, vchtime, esxiinfo):
     #    print("")
     #    print("{0:140}".format('-' * 160))
 
-    vm_name = summary.config.name
+    vm_name = summary.config.name.lower()
     vm_ip_addr = summary.guest.ipAddress
     print("")
     print(
@@ -382,7 +386,7 @@ def PrintVmInfo(args, vm, content, vchtime, esxiinfo):
     print("")
     vm_name_fmt = "[" + vm_name + "]" + " Total vCPUs"
     vm_min_cpu_result = "Pass" if summary.config.numCpu >= float(dx_setting['minimum_cpu']) else "Fail"
-    print("{0:50} {1:<70} {2:30} {3:10}".format(vm_name_fmt, summary.config.numCpu, dx_setting['minimum_cpu'],
+    print("{0:50} {1:<70} {2:30} {3:10}".format(vm_name_fmt, summary.config.numCpu, str(max(int(dx_setting['minimum_cpu']),summary.config.numCpu)),
                                                 vm_min_cpu_result))
 
     cpuMhz = summary.runtime.host.summary.hardware.cpuMhz
@@ -486,7 +490,7 @@ def PrintVmInfo(args, vm, content, vchtime, esxiinfo):
     ctrl_balanced = find_scsictrl_balanced(scsi_hdd_cnt)
     print (" ")
 
-    f = open("logs/vm_stats.csv", "a")
+    f = open(vm_stats_output, "a")
     f.write("{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}\n".format(vm_name, numCpu, vm_vcpu_cores, vmcpures, 'yes' if vmcpures_result == "Pass" else "no", int(math.ceil(float(summary.config.memorySizeMB) / 1024)), int(math.ceil(float(vm_memres))), 'yes' if vm_memory_res_result == "Pass" else "no", vm_memory, vm_cpuhtsharing, 'yes' if vm_cpuhtsharing_result == "Pass" else "no", ctrl_string, 'yes' if ctrl_balanced == "Pass" else "no"))
     f.close()
 
@@ -700,7 +704,7 @@ def PrintAllocCPUMEM(vm, content, vchtime):
 def debug_log(args,str):
     mystr = repr(str)
     #if args.debug:
-    f = open("logs/chk_esxi_settings_debug.txt", "a")
+    f = open(output_file, "a")
     f.write(mystr)
     f.write("\n")
     f.close()
@@ -749,7 +753,9 @@ def main():
     
     try:
         #vmnames = args.vm
-        vmnames = args.vm.split(",")
+        #vmnames = args.vm.split(",")
+        vmnames = args.vm.lower().split(",")
+        #vmnames = map(lambda x:x.lower(),vmnames)
         si = None
         disk_types = ['ssd', 'non_ssd']
 
@@ -828,7 +834,7 @@ def main():
         esxi_update    = "."
         esxi_ht_bp     = "False"
 
-        f = open("logs/esx_global.csv", "a")
+        f = open(esx_global_output, "a")
         f.write("{}, {}, {}, {}, {}, {}, {}, {}, {}\n".format(esxi_version,esxi_build,esxi_update,retESXIProps['esxi_cpus'],retESXIProps['esxi_cores'],retESXIProps['esxi_threads'],retESXIProps['CPUhyperThreadingActive'],retESXIProps['CPUhyperThreadingConfig'],esxi_ht_bp))
         f.close()
 
@@ -843,13 +849,13 @@ def main():
             # print(retval)
             # print("Total CPU Allocated : {0} , Memory Allocated : {1}".format(allocatedCPU, allocatedMEM))
             allvmlist.append(vm['name'])
-            if (vm['name'] in vmnames) and (vm['runtime.powerState'] == "poweredOn"):
+            if (vm['name'].lower() in vmnames) and (vm['runtime.powerState'] == "poweredOn"):
                 logger.info ("VM {} found in {} and powered on".format(vm['name'],args.host ))
                 esxi_info_stat += 1
                 PrintVmInfo(args, vm['moref'], content, vchtime, retESXIProps)
                 vmcount = vmcount + 1
                 
-            elif (vm['name'] in vmnames) and (vm['runtime.powerState'] != "poweredOn"):
+            elif (vm['name'].lower() in vmnames) and (vm['runtime.powerState'] != "poweredOn"):
                 print('ERROR: Problem connecting to Virtual Machine. {} is likely powered off or suspended'.format(vm['name']))
                 logger.error('ERROR: Problem connecting to Virtual Machine. {} is likely powered off or suspended'.format(vm['name']))
                 vmcount = vmcount + 1
@@ -862,6 +868,11 @@ def main():
                 logger.error('vm : {} not found on vmware host {}'.format(currvm,args.host))
                 print('vm : {} not found on vmware host {}'.format(currvm,args.host))
                 return -1
+        if vmcount == 0:
+            logger.error('vm : {} not found on vmware host {}. Please check vm name. VM Name is case sensitive'.format(currvm,args.host))
+            print('vm : {} not found on vmware host {}. Please check vm name. VM Name is case sensitive'.format(currvm,args.host))
+            return -1
+
         Disconnect
         print(' ')
         print('Note : Please send following 3 files generated in current folder to delphix professional services team')
@@ -871,7 +882,7 @@ def main():
         print(' ')
         log_file_handler.close()
         if not args.debug:
-            if path.exists("logs/chk_esxi_settings_debug.log"): os.remove("logs/chk_esxi_settings_debug.log") 
+            if path.exists(debug_logfile): os.remove(debug_logfile) 
 
     except vmodl.MethodFault as e:
         print('Caught vmodl fault: ' + e.msg)
