@@ -30,9 +30,9 @@ optional arguments:
   -t DISK_TYPE, --disk_type DISK_TYPE      Disk Storage Type (non_ssd (default) | ssd
   -d, --debug                              debug info
   -v VERBOSE, --verbose VERBOSE            verbose level... repeat up to three times.
-```
 
-Note : Please use the name of delphix VM as vm name used in esxi host. IP address will not be recognized
+Note : Please use the name of delphix VM as vm name used in esxi host for parameter "-e". IP address will not be recognized.
+```
 
 *Exec Network Tests*
 ```sh
