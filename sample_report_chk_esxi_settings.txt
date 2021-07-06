@@ -1,0 +1,161 @@
+Script Version : 3.0
+Connected.
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SECTION - I : ESXi Host = esxihost.myorg.com
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Settings/Parameters/Version                        Current Value                                                          Recommended Value              Result    
+================================================== ====================================================================== ============================== ==========
+ESXI Hardware                                      LENOVO System x3650 M5: -[5462AC1]-                                    N/A                            N/A       
+ESXI Hostname                                      esxihost.myorg.com                                                     N/A                            N/A       
+ESXI Version                                       6.7.0                                                                  ESXi 5.0 and Higher            Pass      
+ESXI CPU Type                                      Intel(R) Xeon(R) CPU E5-2667 v4 @ 3.20GHz                              N/A                            N/A       
+ESXI CPU Sockets                                   2                                                                      N/A                            N/A       
+ESXI Cores Per Socket                              8.0                                                                    N/A                            N/A       
+ESXi Total CPU                                     16                                                                     N/A                            N/A       
+ESXI Total Allocated CPU                           3259                                                                   Atleast 4 ESX CPU free         Fail      
+ESXI Hyperthreading Enabled                        True                                                                   false                          Fail      
+ESXi BIOS Power Management                         Balanced                                                               High Performance               Fail      
+ESXI Physical Memory                               767 GB                                                                 N/A                            N/A       
+ESXI Total Allocated Memory to all VMs             15388.15625 GB                                                         <=690.30 [ 10% free for ESXI ] Fail      
+ESXI HA                                            [ Verify Manually on ESXi Host ]                                       enabled                        N/A       
+ESXI DRS                                           [ Verify Manually on ESXi Host ]                                       disabled                       N/A       
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SECTION - II : Delphix Engine = dlpxvm01
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+[dlpxvm01] Total vCPUs                             8                                                                      8                              Pass      
+[dlpxvm01] CPU Reservation                         None                                                                   25600 Mhz                      Fail      
+[dlpxvm01] HT Sharing                              any                                                                    none                           Fail      
+
+[dlpxvm01] Total Memory                            128 GB                                                                 >=64 GB                        Pass      
+[dlpxvm01] Memory Reservation                      128.0 GB                                                               128 GB                         Pass      
+
+[dlpxvm01] NIC                                     Network adapter 1 | 00:50:56:b0:af:a5 | VirtualVmxnet3                 vmxnet3                        Pass      
+[dlpxvm01] NIC                                     Network adapter 2 | 00:50:56:b0:58:34 | VirtualVmxnet3                 vmxnet3                        Pass      
+[dlpxvm01] NIC                                     Network adapter 3 | 00:50:56:b0:b2:ad | VirtualVmxnet3                 vmxnet3                        Pass      
+[dlpxvm01] NIC                                     Network adapter 4 | 00:50:56:b0:86:97 | VirtualVmxnet3                 vmxnet3                        Pass      
+
+[dlpxvm01] SCSI Controllers Type                   SCSI controller 0 | LSI Logic                                          LSI Logic                      Pass      
+[dlpxvm01] SCSI Controllers Type                   SCSI controller 1 | LSI Logic                                          LSI Logic                      Pass      
+[dlpxvm01] SCSI Controllers Type                   SCSI controller 2 | LSI Logic                                          LSI Logic                      Pass      
+[dlpxvm01] SCSI Controllers Type                   SCSI controller 3 | LSI Logic                                          LSI Logic                      Pass      
+ 
+[dlpxvm01] [<Controller>:<tot_disks>]              [ SCSI0:6 | SCSI1:5 | SCSI2:5 | SCSI3:5 ]                              Balance All 4 Controllers      Pass      
+[dlpxvm01] Hard disk 1 (ssd)                       Thick Provisioned| Ctrl: 0:0 | Size: 300.0 GB                          Thick                          Pass      
+[dlpxvm01] Hard disk 10 (ssd)                      Thick Provisioned| Ctrl: 0:3 | Size: 2560.0 GB                         Thick                          Pass      
+[dlpxvm01] Hard disk 11 (ssd)                      Thick Provisioned| Ctrl: 1:3 | Size: 2560.0 GB                         Thick                          Pass      
+[dlpxvm01] Hard disk 12 (ssd)                      Thick Provisioned| Ctrl: 2:3 | Size: 2560.0 GB                         Thick                          Pass      
+[dlpxvm01] Hard disk 13 (ssd)                      Thick Provisioned| Ctrl: 3:3 | Size: 2560.0 GB                         Thick                          Pass      
+[dlpxvm01] Hard disk 14 (ssd)                      Thick Provisioned| Ctrl: 0:4 | Size: 2560.0 GB                         Thick                          Pass      
+[dlpxvm01] Hard disk 15 (ssd)                      Thick Provisioned| Ctrl: 1:4 | Size: 2560.0 GB                         Thick                          Pass      
+[dlpxvm01] Hard disk 16 (ssd)                      Thick Provisioned| Ctrl: 2:4 | Size: 2560.0 GB                         Thick                          Pass      
+[dlpxvm01] Hard disk 17 (ssd)                      Thick Provisioned| Ctrl: 3:4 | Size: 2560.0 GB                         Thick                          Pass      
+[dlpxvm01] Hard disk 18 (ssd)                      Thick Provisioned| Ctrl: 0:5 | Size: 2560.0 GB                         Thick                          Pass      
+[dlpxvm01] Hard disk 19 (ssd)                      Thick Provisioned| Ctrl: 1:5 | Size: 2560.0 GB                         Thick                          Pass      
+[dlpxvm01] Hard disk 2 (ssd)                       Thick Provisioned| Ctrl: 0:1 | Size: 2560.0 GB                         Thick                          Pass      
+[dlpxvm01] Hard disk 20 (ssd)                      Thick Provisioned| Ctrl: 2:5 | Size: 2560.0 GB                         Thick                          Pass      
+[dlpxvm01] Hard disk 21 (ssd)                      Thick Provisioned| Ctrl: 3:5 | Size: 2560.0 GB                         Thick                          Pass      
+[dlpxvm01] Hard disk 3 (ssd)                       Thick Provisioned| Ctrl: 1:1 | Size: 2560.0 GB                         Thick                          Pass      
+[dlpxvm01] Hard disk 4 (ssd)                       Thick Provisioned| Ctrl: 2:1 | Size: 2560.0 GB                         Thick                          Pass      
+[dlpxvm01] Hard disk 5 (ssd)                       Thick Provisioned| Ctrl: 3:1 | Size: 2560.0 GB                         Thick                          Pass      
+[dlpxvm01] Hard disk 6 (ssd)                       Thick Provisioned| Ctrl: 0:2 | Size: 2560.0 GB                         Thick                          Pass      
+[dlpxvm01] Hard disk 7 (ssd)                       Thick Provisioned| Ctrl: 1:2 | Size: 2560.0 GB                         Thick                          Pass      
+[dlpxvm01] Hard disk 8 (ssd)                       Thick Provisioned| Ctrl: 2:2 | Size: 2560.0 GB                         Thick                          Pass      
+[dlpxvm01] Hard disk 9 (ssd)                       Thick Provisioned| Ctrl: 3:2 | Size: 2560.0 GB                         Thick                          Pass      
+
+[dlpxvm01] StoragePathPolicy( HDD 1 )              VMW_PSP_MRU                                                            VMW_PSP_RR                     Fail      
+[dlpxvm01] StoragePathPolicy( HDD 2 )              VMW_PSP_MRU                                                            VMW_PSP_RR                     Fail      
+[dlpxvm01] StoragePathPolicy( HDD 3 )              VMW_PSP_MRU                                                            VMW_PSP_RR                     Fail      
+[dlpxvm01] StoragePathPolicy( HDD 4 )              VMW_PSP_MRU                                                            VMW_PSP_RR                     Fail      
+[dlpxvm01] StoragePathPolicy( HDD 5 )              VMW_PSP_MRU                                                            VMW_PSP_RR                     Fail      
+[dlpxvm01] StoragePathPolicy( HDD 6 )              VMW_PSP_MRU                                                            VMW_PSP_RR                     Fail      
+[dlpxvm01] StoragePathPolicy( HDD 7 )              VMW_PSP_MRU                                                            VMW_PSP_RR                     Fail      
+[dlpxvm01] StoragePathPolicy( HDD 8 )              VMW_PSP_MRU                                                            VMW_PSP_RR                     Fail      
+[dlpxvm01] StoragePathPolicy( HDD 9 )              VMW_PSP_MRU                                                            VMW_PSP_RR                     Fail      
+[dlpxvm01] StoragePathPolicy( HDD 10 )             VMW_PSP_MRU                                                            VMW_PSP_RR                     Fail      
+[dlpxvm01] StoragePathPolicy( HDD 11 )             VMW_PSP_MRU                                                            VMW_PSP_RR                     Fail      
+[dlpxvm01] StoragePathPolicy( HDD 12 )             VMW_PSP_MRU                                                            VMW_PSP_RR                     Fail      
+[dlpxvm01] StoragePathPolicy( HDD 13 )             VMW_PSP_MRU                                                            VMW_PSP_RR                     Fail      
+[dlpxvm01] StoragePathPolicy( HDD 14 )             VMW_PSP_MRU                                                            VMW_PSP_RR                     Fail      
+[dlpxvm01] StoragePathPolicy( HDD 15 )             VMW_PSP_MRU                                                            VMW_PSP_RR                     Fail      
+[dlpxvm01] StoragePathPolicy( HDD 16 )             VMW_PSP_MRU                                                            VMW_PSP_RR                     Fail      
+[dlpxvm01] StoragePathPolicy( HDD 17 )             VMW_PSP_MRU                                                            VMW_PSP_RR                     Fail      
+[dlpxvm01] StoragePathPolicy( HDD 18 )             VMW_PSP_MRU                                                            VMW_PSP_RR                     Fail      
+[dlpxvm01] StoragePathPolicy( HDD 19 )             VMW_PSP_MRU                                                            VMW_PSP_RR                     Fail      
+[dlpxvm01] StoragePathPolicy( HDD 20 )             VMW_PSP_MRU                                                            VMW_PSP_RR                     Fail      
+[dlpxvm01] StoragePathPolicy( HDD 21 )             VMW_PSP_MRU                                                            VMW_PSP_RR                     Fail      
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SECTION - II : Delphix Engine = dlpxvm02
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+[dlpxvm02] Total vCPUs                             8                                                                      8                              Pass      
+[dlpxvm02] CPU Reservation                         25600 Mhz                                                              25600 Mhz                      Pass      
+[dlpxvm02] HT Sharing                              none                                                                   none                           Pass      
+
+[dlpxvm02] Total Memory                            128 GB                                                                 >=64 GB                        Pass      
+[dlpxvm02] Memory Reservation                      128.0 GB                                                               128 GB                         Pass      
+
+[dlpxvm02] NIC                                     Network adapter 1 | 00:50:56:b0:df:66 | VirtualVmxnet3                 vmxnet3                        Pass      
+[dlpxvm02] NIC                                     Network adapter 2 | 00:50:56:b0:7e:8c | VirtualVmxnet3                 vmxnet3                        Pass      
+[dlpxvm02] NIC                                     Network adapter 3 | 00:50:56:b0:34:18 | VirtualVmxnet3                 vmxnet3                        Pass      
+[dlpxvm02] NIC                                     Network adapter 4 | 00:50:56:b0:1d:75 | VirtualVmxnet3                 vmxnet3                        Pass      
+
+[dlpxvm02] SCSI Controllers Type                   SCSI controller 0 | LSI Logic                                          LSI Logic                      Pass      
+[dlpxvm02] SCSI Controllers Type                   SCSI controller 1 | LSI Logic                                          LSI Logic                      Pass      
+[dlpxvm02] SCSI Controllers Type                   SCSI controller 2 | LSI Logic                                          LSI Logic                      Pass      
+[dlpxvm02] SCSI Controllers Type                   SCSI controller 3 | LSI Logic                                          LSI Logic                      Pass      
+ 
+[dlpxvm02] [<Controller>:<tot_disks>]              [ SCSI0:6 | SCSI1:5 | SCSI2:5 | SCSI3:5 ]                              Balance All 4 Controllers      Pass      
+[dlpxvm02] Hard disk 1 (ssd)                       Thick Provisioned| Ctrl: 0:0 | Size: 300.0 GB                          Thick                          Pass      
+[dlpxvm02] Hard disk 10 (ssd)                      Thick Provisioned| Ctrl: 0:3 | Size: 2560.0 GB                         Thick                          Pass      
+[dlpxvm02] Hard disk 11 (ssd)                      Thick Provisioned| Ctrl: 1:3 | Size: 2560.0 GB                         Thick                          Pass      
+[dlpxvm02] Hard disk 12 (ssd)                      Thick Provisioned| Ctrl: 2:3 | Size: 2560.0 GB                         Thick                          Pass      
+[dlpxvm02] Hard disk 13 (ssd)                      Thick Provisioned| Ctrl: 3:3 | Size: 2560.0 GB                         Thick                          Pass      
+[dlpxvm02] Hard disk 14 (ssd)                      Thick Provisioned| Ctrl: 0:4 | Size: 2560.0 GB                         Thick                          Pass      
+[dlpxvm02] Hard disk 15 (ssd)                      Thick Provisioned| Ctrl: 1:4 | Size: 2560.0 GB                         Thick                          Pass      
+[dlpxvm02] Hard disk 16 (ssd)                      Thick Provisioned| Ctrl: 2:4 | Size: 2560.0 GB                         Thick                          Pass      
+[dlpxvm02] Hard disk 17 (ssd)                      Thick Provisioned| Ctrl: 3:4 | Size: 2560.0 GB                         Thick                          Pass      
+[dlpxvm02] Hard disk 18 (ssd)                      Thick Provisioned| Ctrl: 0:5 | Size: 2560.0 GB                         Thick                          Pass      
+[dlpxvm02] Hard disk 19 (ssd)                      Thick Provisioned| Ctrl: 1:5 | Size: 2560.0 GB                         Thick                          Pass      
+[dlpxvm02] Hard disk 2 (ssd)                       Thick Provisioned| Ctrl: 0:1 | Size: 2560.0 GB                         Thick                          Pass      
+[dlpxvm02] Hard disk 20 (ssd)                      Thick Provisioned| Ctrl: 2:5 | Size: 2560.0 GB                         Thick                          Pass      
+[dlpxvm02] Hard disk 21 (ssd)                      Thick Provisioned| Ctrl: 3:5 | Size: 2560.0 GB                         Thick                          Pass      
+[dlpxvm02] Hard disk 3 (ssd)                       Thick Provisioned| Ctrl: 1:1 | Size: 2560.0 GB                         Thick                          Pass      
+[dlpxvm02] Hard disk 4 (ssd)                       Thick Provisioned| Ctrl: 2:1 | Size: 2560.0 GB                         Thick                          Pass      
+[dlpxvm02] Hard disk 5 (ssd)                       Thick Provisioned| Ctrl: 3:1 | Size: 2560.0 GB                         Thick                          Pass      
+[dlpxvm02] Hard disk 6 (ssd)                       Thick Provisioned| Ctrl: 0:2 | Size: 2560.0 GB                         Thick                          Pass      
+[dlpxvm02] Hard disk 7 (ssd)                       Thick Provisioned| Ctrl: 1:2 | Size: 2560.0 GB                         Thick                          Pass      
+[dlpxvm02] Hard disk 8 (ssd)                       Thick Provisioned| Ctrl: 2:2 | Size: 2560.0 GB                         Thick                          Pass      
+[dlpxvm02] Hard disk 9 (ssd)                       Thick Provisioned| Ctrl: 3:2 | Size: 2560.0 GB                         Thick                          Pass      
+
+[dlpxvm02] StoragePathPolicy( HDD 1 )              VMW_PSP_MRU                                                            VMW_PSP_MRU                    Pass      
+[dlpxvm02] StoragePathPolicy( HDD 2 )              VMW_PSP_MRU                                                            VMW_PSP_MRU                    Pass      
+[dlpxvm02] StoragePathPolicy( HDD 3 )              VMW_PSP_MRU                                                            VMW_PSP_MRU                    Pass      
+[dlpxvm02] StoragePathPolicy( HDD 4 )              VMW_PSP_MRU                                                            VMW_PSP_MRU                    Pass      
+[dlpxvm02] StoragePathPolicy( HDD 5 )              VMW_PSP_MRU                                                            VMW_PSP_MRU                    Pass      
+[dlpxvm02] StoragePathPolicy( HDD 6 )              VMW_PSP_MRU                                                            VMW_PSP_MRU                    Pass      
+[dlpxvm02] StoragePathPolicy( HDD 7 )              VMW_PSP_MRU                                                            VMW_PSP_MRU                    Pass      
+[dlpxvm02] StoragePathPolicy( HDD 8 )              VMW_PSP_MRU                                                            VMW_PSP_MRU                    Pass      
+[dlpxvm02] StoragePathPolicy( HDD 9 )              VMW_PSP_MRU                                                            VMW_PSP_MRU                    Pass      
+[dlpxvm02] StoragePathPolicy( HDD 10 )             VMW_PSP_MRU                                                            VMW_PSP_MRU                    Pass      
+[dlpxvm02] StoragePathPolicy( HDD 11 )             VMW_PSP_MRU                                                            VMW_PSP_MRU                    Pass      
+[dlpxvm02] StoragePathPolicy( HDD 12 )             VMW_PSP_MRU                                                            VMW_PSP_MRU                    Pass      
+[dlpxvm02] StoragePathPolicy( HDD 13 )             VMW_PSP_MRU                                                            VMW_PSP_MRU                    Pass      
+[dlpxvm02] StoragePathPolicy( HDD 14 )             VMW_PSP_MRU                                                            VMW_PSP_MRU                    Pass      
+[dlpxvm02] StoragePathPolicy( HDD 15 )             VMW_PSP_MRU                                                            VMW_PSP_MRU                    Pass      
+[dlpxvm02] StoragePathPolicy( HDD 16 )             VMW_PSP_MRU                                                            VMW_PSP_MRU                    Pass      
+[dlpxvm02] StoragePathPolicy( HDD 17 )             VMW_PSP_MRU                                                            VMW_PSP_MRU                    Pass      
+[dlpxvm02] StoragePathPolicy( HDD 18 )             VMW_PSP_MRU                                                            VMW_PSP_MRU                    Pass      
+[dlpxvm02] StoragePathPolicy( HDD 19 )             VMW_PSP_MRU                                                            VMW_PSP_MRU                    Pass      
+[dlpxvm02] StoragePathPolicy( HDD 20 )             VMW_PSP_MRU                                                            VMW_PSP_MRU                    Pass      
+[dlpxvm02] StoragePathPolicy( HDD 21 )             VMW_PSP_MRU                                                            VMW_PSP_MRU                    Pass      
+ 
+Note : Please send following 3 files generated in current folder to delphix professional services team
+       1) logs/esx_global.csv
+       2) logs/vm_stats.csv
+       3) logs/chk_esxi_settings.txt
+ 
