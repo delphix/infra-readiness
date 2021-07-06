@@ -1,3 +1,5 @@
+./chk_esxi_settings -s esxihost.myorg.com -u esxi_ro_user -e dlpxvm01,dlpxvm02 -c -t ssd 
+
 Script Version : 3.0
 Connected.
 
