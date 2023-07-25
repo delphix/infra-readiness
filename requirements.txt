@@ -1,5 +1,5 @@
 altgraph==0.16.1
-certifi==2019.9.11
+certifi==2023.7.22
 chardet==3.0.4
 delphixpy==1.10.6.0
 idna==2.8
